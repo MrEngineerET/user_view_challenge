@@ -1,4 +1,5 @@
 const express = require("express");
+const { openMongooseConnection } = require("./db");
 
 const app = express();
 
@@ -7,6 +8,10 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 9090;
-app.listen(PORT, () => {
-  console.log("Express app starts listening on ", PORT);
-});
+openMongooseConnection("mongodb://127.0.0.1:27017/userView")
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Express app listening on port ${PORT}`);
+    });
+  })
+  .catch((error) => console.log("Error opening Mongoose connection", error));
